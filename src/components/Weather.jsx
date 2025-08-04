@@ -10,10 +10,13 @@ const Weather = () => {
 
   const [backMode, setBackMode] = useState("usual");
   const [query, setQuery] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   const handleGetWeather = (e) => {
     e.preventDefault();
     dispatch(getWeatherInfo(query));
+
+    setInputValue(query);
     setQuery("");
   };
 
@@ -22,9 +25,9 @@ const Weather = () => {
       return;
     }
     let temp = data.main.temp;
-    if (temp < 12) {
+    if (temp < 20) {
       setBackMode("cold");
-    } else if (temp < 15) {
+    } else if (temp < 28) {
       setBackMode("usual");
     } else {
       setBackMode("warm");
@@ -39,7 +42,7 @@ const Weather = () => {
             <input
               type="text"
               className="search_input w-100 text_color placeholder_color"
-              placeholder={data.name || "نام شهر یا کشور"}
+              placeholder={"نام شهر یا کشور"}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -65,6 +68,9 @@ const Weather = () => {
         <>
           <div className="row justify-content-center py-3">
             <div className="col-9 col-md-6 col-lg-4 col-xl-3">
+              <div className="city_name text-center text_color valueText">
+                {inputValue}
+              </div>
               <div className="temprature_box pt-3">
                 <span>{Math.round(data.main.temp)}</span> °C
               </div>
