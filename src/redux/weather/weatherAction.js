@@ -26,8 +26,6 @@ const receiveWeatherError = (data) => {
 };
 
 const getWeatherInfo = (query) => {
-  console.log(query);
-
   return (dispatch) => {
     dispatch(sendWeatherRequest());
     axios

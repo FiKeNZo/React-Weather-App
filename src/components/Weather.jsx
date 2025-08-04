@@ -1,36 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import getWeatherInfo from "../redux/weather/weatherAction";
+
 import PersianDate from "./PersianDate";
 
 const Weather = () => {
   const { loading, data, error } = useSelector((state) => state);
   const dispatch = useDispatch();
-
   const [backMode, setBackMode] = useState("usual");
   const [query, setQuery] = useState("");
-  const [inputValue, setInputValue] = useState("");
 
   const handleGetWeather = (e) => {
     e.preventDefault();
-    dispatch(getWeatherInfo(query));
-
-    setInputValue(query);
-    setQuery("");
+    query.length > 1 && dispatch(getWeatherInfo(query));
+    console.log(query);
   };
 
   useEffect(() => {
-    if (!data.main) {
-      return;
-    }
+    if (!data.main) return;
     let temp = data.main.temp;
-    if (temp < 20) {
-      setBackMode("cold");
-    } else if (temp < 28) {
-      setBackMode("usual");
-    } else {
-      setBackMode("warm");
+    switch (true) {
+      case temp < 20:
+        setBackMode("cold");
+        break;
+      case temp < 28:
+        setBackMode("usual");
+        break;
+
+      default:
+        setBackMode("warm");
+        break;
     }
   }, [data]);
 
@@ -69,7 +69,7 @@ const Weather = () => {
           <div className="row justify-content-center py-3">
             <div className="col-9 col-md-6 col-lg-4 col-xl-3">
               <div className="city_name text-center text_color valueText">
-                {inputValue}
+                {data.name}
               </div>
               <div className="temprature_box pt-3">
                 <span>{Math.round(data.main.temp)}</span> °C
@@ -86,10 +86,12 @@ const Weather = () => {
         </>
       ) : error ? (
         <h3 className="text-center text_color">
-          نام شهر یا کشور به درستی وارد کنید
+          نام شهر یا کشور را به درستی وارد کنید
         </h3>
       ) : (
-        <h3 className="text-center text_color">مکان مورد نظر را جستجو کنید</h3>
+        <h3 className="text-center text_color">
+          شهر یا کشور مورد نظر را جستجو کنید
+        </h3>
       )}
     </div>
   );
